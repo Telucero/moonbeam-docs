@@ -102,6 +102,7 @@ def _should_skip_path(rel_path: str, languages: list[str]) -> bool:
     if not _is_allowed_file(lower):
         return True
     parts = Path(lower).parts
+    # Skip files already under a locale directory
     for lang in languages:
         if parts and parts[0] == lang:
             return True
@@ -120,6 +121,7 @@ def _derive_target_path(rel_path: str, language: str) -> str:
         new_name = f"{language}{filename.suffix or '.yml'}"
         return str(Path("locale", *rest[:-1], new_name))
 
+    # Handle material-overrides/.translations/<lang>.json
     if ".translations" in parts:
         idx = parts.index(".translations")
         before = parts[: idx + 1]
